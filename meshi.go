@@ -87,7 +87,7 @@ func Meshi(api_key string, lat float64, lng float64, rad uint, keyword string) *
 	a.Footer = "/meshi command by @Ryota Kayanuma"
 
 	msg := slack.Msg{}
-	msg.ResponseType = "ephemeral"
+	msg.ResponseType = "in_channel"
 	msg.Attachments = []slack.Attachment{a}
 	return &msg
 }
