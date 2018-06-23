@@ -36,7 +36,7 @@ func main() {
 			)
 			fmt.Println(m)
 
-			params := m //&slack.Msg{Text: s.Text}
+			params := m
 
 			slack.NewPostMessageParameters()
 			b, err := json.Marshal(params)

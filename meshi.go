@@ -28,9 +28,15 @@ var (
 
 // Meshi searches some restraunt with given name and returns
 func Meshi(api_key string, lat float64, lng float64, rad uint, keyword string) *slack.Msg {
+	if keyword == "" {
+		log.Printf("Bad keyword: %s", keyword)
+		return &slack.Msg{Text: "検索ワードを指定してください。例: `/meshi パフェ`"}
+	}
+
 	c, err := maps.NewClient(maps.WithAPIKey(api_key), maps.WithRateLimit(FREE_QUERY_PER_SECOND))
 	if err != nil {
-		log.Fatalf("fatal error: %s", err)
+		log.Printf("Client error: %s", err)
+		return &slack.Msg{Text: "認証に失敗しました。ごめん。"}
 	}
 
 	r := &maps.NearbySearchRequest{
@@ -46,7 +52,8 @@ func Meshi(api_key string, lat float64, lng float64, rad uint, keyword string) *
 
 	response, err := c.NearbySearch(context.Background(), r)
 	if err != nil {
-		log.Fatalf("fatal error: %s", err)
+		log.Printf("Search error: %s", err)
+		return &slack.Msg{Text: "検索結果が見つかりませんでした。"}
 	}
 	restraunt := response.Results[rand.Intn(len(response.Results))]
 
@@ -55,9 +62,8 @@ func Meshi(api_key string, lat float64, lng float64, rad uint, keyword string) *
 
 	a := slack.Attachment{}
 	a.Fallback = restraunt.Name
-	a.Pretext = "これどうかな？"
+	a.Pretext = fmt.Sprintf("これどうかな？「%s」の検索結果だよ。", keyword)
 	a.Title = restraunt.Name
-	a.Text = fmt.Sprintf("「%s」の検索結果だよ。", keyword)
 	a.Color = "#008000"
 
 	a.Fields = []slack.AttachmentField{
@@ -68,7 +74,7 @@ func Meshi(api_key string, lat float64, lng float64, rad uint, keyword string) *
 		},
 		slack.AttachmentField{
 			Title: "評価",
-			Value: fmt.Sprintf("%fツ星", restraunt.Rating),
+			Value: fmt.Sprintf("%.1fツ星", restraunt.Rating),
 			Short: true,
 		},
 		slack.AttachmentField{
@@ -81,7 +87,7 @@ func Meshi(api_key string, lat float64, lng float64, rad uint, keyword string) *
 	a.Footer = "/meshi command by @Ryota Kayanuma"
 
 	msg := slack.Msg{}
-	msg.ResponseType = "in_channel"
+	msg.ResponseType = "ephemeral"
 	msg.Attachments = []slack.Attachment{a}
 	return &msg
 }
