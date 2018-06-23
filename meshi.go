@@ -26,7 +26,7 @@ var (
 	}
 )
 
-// Meshi searches some restraunt with given name and returns
+// Meshi searches some restraunt with given keyword using Google Maps API and returns result in slack.Msg format.
 func Meshi(api_key string, lat float64, lng float64, rad uint, keyword string) *slack.Msg {
 	if keyword == "" {
 		log.Printf("Bad keyword: %s", keyword)
@@ -89,5 +89,14 @@ func Meshi(api_key string, lat float64, lng float64, rad uint, keyword string) *
 	msg := slack.Msg{}
 	msg.ResponseType = "in_channel"
 	msg.Attachments = []slack.Attachment{a}
+	return &msg
+}
+
+// MeshiDetail searches restraunt, using gurunavi API.
+func MeshiDetail(api_key string, name string, areacode_l string) *slack.Msg {
+
+	msg := slack.Msg{}
+	msg.ResponseType = "in_channel"
+	msg.Attachments = []slack.Attachment{}
 	return &msg
 }
