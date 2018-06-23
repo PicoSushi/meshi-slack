@@ -53,7 +53,7 @@ func Meshi(api_key string, lat float64, lng float64, rad uint, keyword string) *
 	response, err := c.NearbySearch(context.Background(), r)
 	if err != nil {
 		log.Printf("Search error: %s", err)
-		return &slack.Msg{Text: "検索結果が見つかりませんでした。"}
+		return &slack.Msg{Text: fmt.Sprintf("「%s」の検索結果が見つかりませんでした。", keyword)}
 	}
 	restraunt := response.Results[rand.Intn(len(response.Results))]
 
