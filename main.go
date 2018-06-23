@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/PicoSushi/meshi/client"
 	"github.com/nlopes/slack"
 )
 
@@ -29,10 +28,17 @@ func main() {
 
 		switch s.Command {
 		case "/meshi":
-			m := meshi.Meshi(googleMapsApiKey, 35.690921, 139.700258, 500, s.Text)
+			m := Meshi(
+				googleMapsApiKey,
+				35.690921, 139.700258,
+				500,
+				s.Text,
+			)
 			fmt.Println(m)
 
-			params := &slack.Msg{Text: s.Text}
+			params := m //&slack.Msg{Text: s.Text}
+
+			slack.NewPostMessageParameters()
 			b, err := json.Marshal(params)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
