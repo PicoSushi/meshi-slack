@@ -31,7 +31,7 @@ func main() {
 		case "/meshi":
 			m := Meshi(
 				googleMapsApiKey,
-				35.690921, 139.700258,
+				35.6863929, 139.7004232,
 				500,
 				s.Text,
 			)

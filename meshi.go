@@ -47,7 +47,7 @@ func Meshi(api_key string, lat float64, lng float64, rad uint, keyword string) *
 		Radius:  rad,
 		Keyword: keyword,
 		Type:    maps.PlaceTypeRestaurant,
-		OpenNow: false,
+		OpenNow: true,
 	}
 
 	response, err := c.NearbySearch(context.Background(), r)
@@ -81,6 +81,15 @@ func Meshi(api_key string, lat float64, lng float64, rad uint, keyword string) *
 			Title: "場所",
 			Value: restraunt.Vicinity,
 			Short: false,
+		},
+	}
+
+	a.Actions = []slack.AttachmentAction{
+		slack.AttachmentAction{
+			Name:  "meshi-action",
+			Text:  ":mag: 詳しく",
+			Type:  "button",
+			Value: "detail",
 		},
 	}
 
